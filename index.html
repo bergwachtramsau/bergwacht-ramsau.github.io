@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<link rel="icon" href="Bilder/favicon.ico">
+<title>Bergwacht Ramsau</title>
+<meta name="description" content="Die Bergwacht Ramsau stellt die Bergrettung im Nationalpark Berchtesgaden am Watzmann, Hochkalter und der Reiteralpe sicher. Die mehr als 40 Bergretter:innen leisten ehrenamtlich mehr als 100 Einsätze pro Jahr in den Berchtesgadener Alpen.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="UwR4ndPbiOVgMYHwC-Migkkmq37lnC8N3xBZ0HM429I" />
+<link rel="stylesheet" href="resources/w3.css">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: sans-serif;}
+body, html {
+  height: 100%;
+  color: #444;
+  line-height: 1.8;
+}
+
+/* Create a Parallax Effect */
+.bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4, .bgimg-5, .bgimg-6 {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* First image (Logo. Full height) */
+.bgimg-1 {
+  background-image: url('Bilder/Panorama2.jpeg');
+  min-height: 100vh;
+}
+
+/* Second image (Portfolio) */
+.bgimg-2 {
+  background-image: url("Bilder/Bereitschaftsfoto.jpg");
+  min-height: 600px;
+}
+
+/* Third image */
+.bgimg-3 {
+  background-image: url("Bilder/Ch14.jpg");
+  min-height: 600px;
+}
+
+/* Fourth image */
+.bgimg-4 {
+  background-image: url("Bilder/Panorama1.jpeg");
+  min-height: 600px;
+}
+
+/* Fifth image (Contact) */
+.bgimg-5 {
+  background-image: url("Bilder/Ch1.jpg");
+  min-height: 600px;
+}
+
+/* Sixth image */
+.bgimg-6 {
+  background-image: url("Bilder/ATV.jpg");
+  min-height: 600px;
+}
+
+.bwr-wide {letter-spacing: 10px;}
+.bwr-top {position:fixed;width:100%;z-index:1;top: 0;}
+
+/* Turn off parallax scrolling for tablets and phones */
+@media only screen and (max-device-width: 1600px) {
+  .bgimg-1, .bgimg-2, .bgimg-3, .bgimg-4, .bgimg-5, .bgimg-6 {
+    background-attachment: scroll;
+    min-height: 400px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar (sit on top) -->
+<div class="bwr-top">
+  <div class="w3-bar w3-text-white" id="myNavbar">
+    <a href="#home" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">STARTSEITE</a>
+    <a href="#about" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">ÜBER UNS</a>
+    <a href="#donate" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">SPENDEN</a>
+    <a href="#report" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">JAHRESBERICHT</a>
+    <a href="#contact" class="w3-bar-item w3-button w3-hide-small w3-hide-medium">KONTAKT</a>
+    <a href="https://www.facebook.com/bergwachtramsau" class="w3-bar-item w3-button w3-right w3-hover-red" target="_blank">
+      <img alt="facebook" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMjQiIGhlaWdodD0iMjQiCnZpZXdCb3g9IjAgMCA1MCA1MCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij4gICAgPHBhdGggZD0iTTQxLDRIOUM2LjI0LDQsNCw2LjI0LDQsOXYzMmMwLDIuNzYsMi4yNCw1LDUsNWgzMmMyLjc2LDAsNS0yLjI0LDUtNVY5QzQ2LDYuMjQsNDMuNzYsNCw0MSw0eiBNMzcsMTloLTJjLTIuMTQsMC0zLDAuNS0zLDIgdjNoNWwtMSw1aC00djE1aC01VjI5aC00di01aDR2LTNjMC00LDItNyw2LTdjMi45LDAsNCwxLDQsMVYxOXoiPjwvcGF0aD48L3N2Zz4="/> FACEBOOK
+    </a>
+    <a href="https://www.instagram.com/bergwachtramsau" class="w3-bar-item w3-button w3-right w3-hover-red" target="_blank">
+      <img alt="instagram" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMjQiIGhlaWdodD0iMjQiCnZpZXdCb3g9IjAgMCAyNCAyNCIKc3R5bGU9IiBmaWxsOiMwMDAwMDA7Ij4gICAgPHBhdGggZD0iTSA4IDMgQyA1LjI0MyAzIDMgNS4yNDMgMyA4IEwgMyAxNiBDIDMgMTguNzU3IDUuMjQzIDIxIDggMjEgTCAxNiAyMSBDIDE4Ljc1NyAyMSAyMSAxOC43NTcgMjEgMTYgTCAyMSA4IEMgMjEgNS4yNDMgMTguNzU3IDMgMTYgMyBMIDggMyB6IE0gOCA1IEwgMTYgNSBDIDE3LjY1NCA1IDE5IDYuMzQ2IDE5IDggTCAxOSAxNiBDIDE5IDE3LjY1NCAxNy42NTQgMTkgMTYgMTkgTCA4IDE5IEMgNi4zNDYgMTkgNSAxNy42NTQgNSAxNiBMIDUgOCBDIDUgNi4zNDYgNi4zNDYgNSA4IDUgeiBNIDE3IDYgQSAxIDEgMCAwIDAgMTYgNyBBIDEgMSAwIDAgMCAxNyA4IEEgMSAxIDAgMCAwIDE4IDcgQSAxIDEgMCAwIDAgMTcgNiB6IE0gMTIgNyBDIDkuMjQzIDcgNyA5LjI0MyA3IDEyIEMgNyAxNC43NTcgOS4yNDMgMTcgMTIgMTcgQyAxNC43NTcgMTcgMTcgMTQuNzU3IDE3IDEyIEMgMTcgOS4yNDMgMTQuNzU3IDcgMTIgNyB6IE0gMTIgOSBDIDEzLjY1NCA5IDE1IDEwLjM0NiAxNSAxMiBDIDE1IDEzLjY1NCAxMy42NTQgMTUgMTIgMTUgQyAxMC4zNDYgMTUgOSAxMy42NTQgOSAxMiBDIDkgMTAuMzQ2IDEwLjM0NiA5IDEyIDkgeiI+PC9wYXRoPjwvc3ZnPg=="/> INSTAGRAM
+    </a>
+  </div>
+</div>
+
+<!-- First Parallax Image with Logo Text -->
+<div class="bgimg-1 w3-display-container" id="home">
+  <div class="w3-display-topmiddle w3-padding-64">
+      <img src="Bilder/Logo.svg" class="w3-image" style="height:20vh;" alt="Logo">
+  </div>
+</div>
+
+<!-- Container (About Section) -->
+<div class="w3-content w3-container w3-padding-64" id="about">
+  <h3 class="w3-center">ÜBER UNS</h3>
+  <p align="justify">
+    Unser Einsatzgebiet erstreckt sich zum Großteil über das Gebiet des Nationalparks Berchtesgaden mit Watzmann, Hochkalter, Blaueisgletscher und Reiteralpe sowie über Ausläufer des Lattengebirges, der Mordau-Alm und das Familienskigebiet Hochschwarzeck.  
+  </p>
+  <p align="justify">
+    Wir sind ein Team von mehr als 40 aktiven Bergwachtfrauen und -männern aller Generationen, die sich ehrenamtlich für die Bergrettung in Bayern engagieren. Darunter sind Spezialisten aller Art, wie Bergführer, Notärzte, Rettungssanitäter, Einsatzleiter mit Spezialisierungen für Umwelteinsätze und Großschadensereignisse. Wir haben ausgebildete Luft-, Canyon- und Höhlenretter, Lawinenhundeführer, Fachausbilder Luft-, Sommer- und Winterrettung, Recco-SAR-Operatoren, Kriseninterventionsberater, Fachberater für Naturschutz, Digitalfunk, Technik, Presse- und Öffentlichkeitsarbeit. Unser Team besteht aus Mitgliedern unterschiedlichster Berufsgruppen, ohne die man nicht auskommt, wie Finanzbuchhalter, Kfz-Mechaniker, Elektriker, Informatiker und viele mehr. All dies geschieht ehrenamtlich.  
+  </p>
+</div>
+
+<!-- Second Parallax Image -->
+<div class="bgimg-2 w3-display-container w3-opacity-min">
+  <div class="w3-display-middle">
+    <span class="w3-xxlarge w3-text-white bwr-wide"></span>
+  </div>
+</div>
+
+<div class="w3-row w3-center w3-dark-grey w3-padding-16">
+  <div class="w3-quarter w3-section">
+    <span class="w3-xlarge">40+</span><br>
+    Aktive Bergretter:innen
+  </div>
+  <div class="w3-quarter w3-section">
+    <span class="w3-xlarge">100+</span><br>
+    Einsätze pro Jahr
+  </div>
+  <div class="w3-quarter w3-section">
+    <span class="w3-xlarge">5</span><br>
+    Bergrettungsfahrzeuge
+  </div>
+  <div class="w3-quarter w3-section">
+    <span class="w3-xlarge">150+</span><br>
+    Ausbildungsstunden pro Jahr
+  </div>
+</div>
+
+<!-- Third Parallax Image with Contact Text -->
+<div class="bgimg-3 w3-display-container w3-opacity-min" id="donate">
+  <div class="w3-display-middle">
+     <span class="w3-xxlarge w3-text-white bwr-wide">Spenden</span>
+  </div>
+</div>
+
+<!-- Container (Donate Section) -->
+<div class="w3-content w3-container w3-padding-64">
+  <h4 class="w3-center">Ohne Spenden keine Bergrettung!</h4>
+  <p class="w3-center">
+    Der Bergrettungsdienst in Bayern trägt sich nicht selbst. Wir sind daher auf Spenden angewiesen, um im hochalpinen Gelände jederzeit helfen zu können.
+  </p>
+  <p class="w3-center"><em>Unterstützen Sie die Bergwacht Ramsau mit Ihrer Spende oder langfristig als Förderer.<br>
+    Als Förderer profitieren Sie vom Rückholdienst der Bergwacht Bayern.</em></p><br>
+
+  <!-- Responsive Grid. Four columns on tablets, laptops and desktops. Will stack on mobile devices/small screens (100% width) -->
+  <div class="w3-row-padding w3-center">
+    <div class="w3-col m4">
+      <p>
+        Hier finden Sie den Antrag zum Förderer der Bergwacht Ramsau:
+        </p>
+        <p>
+        <a href="download/Foerdererantrag.pdf" target="_blank">FÖRDERERANTRAG</a><br>
+        <a href="https://cms.bergwacht-bayern.de/spendenseite/Rueckholinfo.pdf" target="_blank">Informationen zum Rückholdienst</a>
+      </p>
+    </div>
+
+    <div class="w3-col m4">
+      <p>Direkt über PayPal oder per Kreditkarte spenden:</p>
+    <form action="https://www.paypal.com/donate" method="post" target="_top">
+      <input type="hidden" name="hosted_button_id" value="98JF28SFRT3M2" />
+      <input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Spenden mit dem PayPal-Button" />
+      <img alt="" border="0" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
+      </form>
+    </div>
+
+    <div class="w3-col m4">
+      <p>
+        BANK: Volks- u. Raiffeisenbank BGL e.G.<br>
+        BIC: GENODEF1BGL<br>
+        IBAN: DE12 7109 0000 0003 4112 14
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Fourth Parallax Image with Contact Text -->
+<div class="bgimg-4 w3-display-container w3-opacity-min" id="report">
+  <div class="w3-display-middle">
+     <span class="w3-xxlarge w3-text-white bwr-wide">Jahresbericht</span>
+  </div>
+</div>
+
+<!-- Container (Donate Section) -->
+<div class="w3-content w3-container w3-padding-64">
+
+  <p class="w3-center"><em>Hier können Sie die Jahresberichte der letzten Jahre ansehen.<br>
+    Zum öffnen klicken Sie auf das Cover des jeweiligen Jahresberichts.</em></p><br>
+
+  <!-- Responsive Grid. Four columns on tablets, laptops and desktops. Will stack on mobile devices/small screens (100% width) -->
+  <div class="w3-row-padding w3-center">
+
+    <div class="w3-col m4">
+      <a href="download/Jahresbericht.pdf" target="_blank"><img src="Bilder/Jahresbericht2023.jpg" class="w3-image" style="width:100%;" alt="Jahresbericht Bergwacht Ramsau 2023"></a>
+    </div>
+
+    <div class="w3-col m4">
+      <a href="download/Jahresbericht2022.pdf" target="_blank"><img src="Bilder/Jahresbericht2022.jpg" class="w3-image" style="width:100%;" alt="Jahresbericht Bergwacht Ramsau 2022"></a>
+    </div>
+
+    <div class="w3-col m4">
+      <a href="download/Jahresbericht2021.pdf" target="_blank"><img src="Bilder/Jahresbericht2021.jpg" class="w3-image" style="width:100%;" alt="Jahresbericht Bergwacht Ramsau 2021"></a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Fifth Parallax Image with Contact Text -->
+<div class="bgimg-5 w3-display-container w3-opacity-min" id="contact">
+  <div class="w3-display-middle">
+     <span class="w3-xxlarge w3-text-white bwr-wide">Kontakt</span>
+  </div>
+</div>
+
+<!-- Container (Contact Section) -->
+<div class="w3-content w3-container w3-padding-64">
+      <div class="w3-large w3-margin-bottom w3-center">
+        Bergwacht Ramsau<br>
+        Im Tal 2, 83486 Ramsau<br>
+        Telefon: <a href="tel:+498657202">+49 8657 202</a><br>
+        E-Mail: <a href="mailto:info@bergwacht-ramsau.de">info@bergwacht-ramsau.de</a><br>
+      </div>
+  </div>
+
+  <!-- Sixth Parallax Image with Contact Text -->
+<div class="bgimg-6 w3-display-container w3-opacity-min" id="contact">
+  <div class="w3-display-middle">
+     <span class="w3-xxlarge w3-text-white bwr-wide"></span>
+  </div>
+</div>
+
+  <!-- Footer -->
+  <footer class="w3-center w3-black w3-padding-64">
+    <div class="w3-row-padding w3-center">
+
+      <div class="w3-col m4">
+        <h4>Rechtliches</h4>
+        <h5><a href="impressum.html" target="_blank">Impressum</a></h5>
+        <h5><a href="datenschutz.html" target="_blank">Datenschutz</a></h5>
+      </div>
+  
+      <div class="w3-col m4">
+        <h4>Informationen</h4>
+        <h5><a href="https://www.dav-berchtesgaden.de/service/alpine-auskunft.html" target="_blank">Alpine Auskunft</a></h5>
+        <h5><a href="https://www.lawinenwarndienst-bayern.de/" target="_blank">Lawinenlagebericht Bayern</a></h5>
+        <h5><a href="https://lawine.salzburg.at/" target="_blank">Lawinenlagebericht Salzburg</a></h5>
+      </div>
+  
+      <div class="w3-col m4">
+        <h4>Webcams</h4>
+        <h5><a href="webcams" target="_blank">Headup Display Bergwacht Ramsau</a></h5>
+        <h5><a href="https://www.bergfex.de/sommer/berchtesgaden/webcams/c10218/" target="_blank">Webcam Watzmannhaus</a></h5>
+        <h5><a href="https://www.bergfex.de/sommer/berchtesgadener-land/webcams/c6493/" target="_blank">Webcam Blaueishütte</a></h5>
+      </div>
+  
+    </div>
+  </footer>
+<script>
+
+// Change style of navbar on scroll
+window.onscroll = function() {myFunction()};
+function myFunction() {
+    var navbar = document.getElementById("myNavbar");
+    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        navbar.className = navbar.className.replace(" w3-text-white", " w3-card w3-white");
+    } else {
+        navbar.className = navbar.className.replace(" w3-card w3-white", " w3-text-white");
+    }
+}
+</script>
+
+</body>
+</html>
+
