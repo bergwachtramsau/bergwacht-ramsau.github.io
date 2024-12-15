@@ -347,266 +347,280 @@
             warningIndex++;
             if (warningIndex > warnings.length) { warningIndex = 1 }
             warnings[warningIndex - 1].style.display = "block";
-            setTimeout(showWarnings, 15000); // Change image every 15 seconds
+            setTimeout(showWarnings, 15000); // Change image every 15 a
         }
 
     </script>
     <script>
-        generateAvalancheWarnings('https://www.avalanche-warnings.eu/public/salzburg/caaml', 'AT-05-17', 'sa', 'Pinzgau');
-        generateAvalancheWarnings('https://www.avalanche-warnings.eu/public/bayern/caaml', 'DE-BY-60', 'by', 'Berchtesgaden');
+        generateAvalancheWarnings('https://static.lawinen-warnung.eu/bulletins/latest/AT-05_de_CAAMLv6.json', 'AT-05-17', 'sa', 'Pinzgau');
+        generateAvalancheWarnings('https://static.lawinen-warnung.eu/bulletins/latest/DE-BY_de_CAAMLv6.json', 'DE-BY-60', 'by', 'Berchtesgaden');
 
-        function generateAvalancheWarnings(url, region, elementId, name) {
+        function generateAvalancheWarnings(url, regionID, elementId, name) {
             fetch(url)
-                .then(function (response) {
-                    return response.text();
-                })
-                .then(function (data) {
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(data, 'text/xml');
-                    const warning = getWarningsForRegion(xmlDoc, region);
-                    const date = getWarningDate(warning);
-                    const ratings = warning.getElementsByTagName('DangerRating');
-                    const ratingsAndHeight = getRatingsAndHeight(ratings);
-                    const problems = warning.getElementsByTagName('AvProblem');
-                    const problemsAndAspects = getProblemsAndAspects(problems);
-                    if (ratingsAndHeight.length === 0) {
+                .then(response => response.json())
+                .then(data => {
+                    // Find the relevant bulletin for the given regionID
+                    const relevantBulletin = data.bulletins.find(bulletin =>
+                        bulletin.regions.some(region => region.regionID === regionID)
+                    );
+
+                    if (!relevantBulletin) {
+                        console.log(`No bulletin found for region: ${regionID}`);
                         return;
                     }
-                    const element = document.getElementById(elementId);
-                    if (ratingsAndHeight.length === 1) {
-                        const container = document.getElementById('avalanche');
-                        container.className = "avalanche";
-                        let header = document.createElement("p");
-                        header.appendChild(document.createTextNode(name));
-                        element.appendChild(header);
-                        const img = document.createElement("img");
-                        img.src = "https://www.avalanche-warnings.eu/images/common/avalanche-levels/danger_" + ratingsAndHeight[0].level + ".svg";
-                        img.width = 200;
-                        img.alt = ratingsAndHeight[0].level;
-                        element.appendChild(img);
-                        let para = document.createElement("p");
-                        if (ratingsAndHeight[0].height) {
-                            para.appendChild(document.createTextNode(ratingsAndHeight[0].height));
-                            para.appendChild(document.createElement("br"))
-                        }
-                        para.appendChild(document.createTextNode(date));
-                        element.appendChild(para);
-                    } else {
-                        const container = document.getElementById('avalanche');
-                        container.className = "avalanche";
-                        let header = document.createElement("p");
-                        header.appendChild(document.createTextNode(name));
-                        element.appendChild(header);
-                        if (new Date(ratingsAndHeight[0].end) < new Date(ratingsAndHeight[1].end)) {
-                            const img = document.createElement("img");
-                            img.src = "https://www.avalanche-warnings.eu/images/common/avalanche-levels/danger_" + ratingsAndHeight[0].level + ".svg";
-                            img.width = 100;
-                            img.alt = ratingsAndHeight[0].level;
-                            element.appendChild(img);
-                            const img2 = document.createElement("img");
-                            img2.src = "https://www.avalanche-warnings.eu/images/common/avalanche-levels/danger_" + ratingsAndHeight[1].level + ".svg";
-                            img2.width = 100;
-                            img2.alt = ratingsAndHeight[1].level;
-                            element.appendChild(img2);
-                            let para = document.createElement("p");
-                            para.appendChild(document.createTextNode("Vormittag - Nachmittag"));
-                            if (ratingsAndHeight[0].height) {
-                                para.appendChild(document.createElement("br"))
-                                para.appendChild(document.createTextNode(ratingsAndHeight[0].height));
-                            }
-                            para.appendChild(document.createElement("br"))
-                            para.appendChild(document.createTextNode(date));
-                            element.appendChild(para);
-                        } else {
-                            const img = document.createElement("img");
-                            img.src = "https://www.avalanche-warnings.eu/images/common/avalanche-levels/danger_" + ratingsAndHeight[1].level + ".svg";
-                            img.width = 100;
-                            img.alt = ratingsAndHeight[1].level;
-                            element.appendChild(img);
-                            const img2 = document.createElement("img");
-                            img2.src = "https://www.avalanche-warnings.eu/images/common/avalanche-levels/danger_" + ratingsAndHeight[0].level + ".svg";
-                            img2.width = 100;
-                            img2.alt = ratingsAndHeight[0].level;
-                            element.appendChild(img2);
-                            let para = document.createElement("p");
-                            para.appendChild(document.createTextNode("Vormittag - Nachmittag"));
-                            if (ratingsAndHeight[1].height) {
-                                para.appendChild(document.createElement("br"));
-                                para.appendChild(document.createTextNode(ratingsAndHeight[1].height));
-                            }
 
-                            para.appendChild(document.createElement("br"))
-                            para.appendChild(document.createTextNode(date));
-                            element.appendChild(para);
-                        }
+                    const container = document.getElementById('avalanche');
+                    container.className = "avalanche";
+                    const element = document.getElementById(elementId);
+
+                    // Display region name
+                    const header = document.createElement("p");
+                    header.textContent = name;
+                    element.appendChild(header);
+
+                    // Process danger ratings and separate by time periods
+                    const dangerRatings = relevantBulletin.dangerRatings || [];
+                    const groupedRatings = groupDangerRatingsByTime(dangerRatings);
+
+                    // Display morning and afternoon danger levels separately if present
+                    if (groupedRatings.morning?.length > 0 && groupedRatings.afternoon?.length > 0) {
+                        const imgMorning = createDangerImage(groupedRatings.morning, "100px");
+                        const imgAfternoon = createDangerImage(groupedRatings.afternoon, "100px");
+
+                        element.appendChild(imgMorning);
+                        element.appendChild(imgAfternoon);
+
+                        const timeText = document.createElement("p");
+                        timeText.textContent = "Vormittag - Nachmittag";
+                        element.appendChild(timeText);
+                    } else {
+                        const img = createDangerImage(groupedRatings.all_day, "200px");
+                        element.appendChild(img);
                     }
-                    problemsAndAspects.forEach((value, key) => {
-                        const container = document.createElement("div");
-                        container.className = "type-aspect";
+
+                    // Display validity date
+                    const dateText = document.createElement("p");
+                    dateText.textContent = new Date(relevantBulletin.validTime.endTime).toLocaleDateString("de-DE");
+                    element.appendChild(dateText);
+
+                    // Extract and display avalanche problems
+                    const avalancheProblems = relevantBulletin.avalancheProblems || [];
+                    avalancheProblems.forEach(problem => {
+                        const problemContainer = document.createElement("div");
+                        problemContainer.className = "type-aspect";
+
+                        // Display problem type
                         const typeContainer = document.createElement("div");
                         typeContainer.className = "type";
                         const img = document.createElement("img");
-                        img.src = "resources/" + key + ".png";
+                        img.src = `resources/${problem.problemType}.png`;
                         img.width = 100;
-                        img.alt = key;
-                        typeContainer.appendChild(img)
-                        container.appendChild(typeContainer);
+                        img.alt = problem.problemType;
+                        typeContainer.appendChild(img);
+                        problemContainer.appendChild(typeContainer);
+
+                        // Display aspects
                         const aspectContainer = document.createElement("div");
                         aspectContainer.className = "aspect";
-                        for (let j = 0; j < value.length; j++) {
-                            const aspect = document.createElement("img");
-                            aspect.src = "resources/exposition_" + value[j].toLowerCase() + ".png";
-                            aspect.width = 100;
-                            aspect.alt = value[j];
-                            aspect.className = "aspect-img"
-                            aspectContainer.appendChild(aspect);
-                        }
+                        (problem.aspects || []).forEach(aspect => {
+                            const aspectImg = document.createElement("img");
+                            aspectImg.src = `resources/exposition_${aspect.toLowerCase()}.png`;
+                            aspectImg.width = 100;
+                            aspectImg.alt = aspect;
+                            aspectImg.className = "aspect-img";
+                            aspectContainer.appendChild(aspectImg);
+                        });
+
                         const rose = document.createElement("img");
                         rose.src = "resources/exposition_bg.png";
                         rose.width = 100;
-                        rose.alt = value.toString();
-                        rose.className = "aspect-img"
+                        rose.alt = problem.aspects ? problem.aspects.join(", ") : "No aspects";
+                        rose.className = "aspect-img";
                         aspectContainer.appendChild(rose);
-                        container.appendChild(aspectContainer);
-                        element.appendChild(container);
+
+                        problemContainer.appendChild(aspectContainer);
+                        element.appendChild(problemContainer);
                     });
-                }).catch(function (error) {
-                    console.log("Fehler: bei Auslesen der XML-Datei " + error);
+                })
+                .catch(error => {
+                    console.error(`Error fetching JSON data: ${error}`);
                 });
         }
 
-        function getWarningsForRegion(xmlDoc, region) {
-            locRefs = xmlDoc.getElementsByTagName('locRef');
-            for (let i = 0; i < locRefs.length; i++) {
-                let locRef = locRefs.item(i);
-                if (locRef.attributes['xlink:href']['value'] === region) {
-                    return locRef.parentElement;
-                }
-            }
-        }
-        function getRatingsAndHeight(ratings) {
-            const tempRatings = generateTempRatings(ratings);
-            if (tempRatings.length === 1) {
-                return [{ level: tempRatings[0].level, height: null }];
-            } else if (tempRatings.length > 1 && tempRatings.some(rating => rating.elevation)) {
-                const hiRatings = tempRatings.filter(rating => rating.elevation.endsWith('Hi'));
-                const loRatings = tempRatings.filter(rating => rating.elevation.endsWith('Lo'));
-                if (hiRatings.length == 1) {
-                    let height = "Waldgrenze"
-                    let elevation = hiRatings[0].elevation.substring(0, hiRatings[0].elevation.length - 2);
-                    if (elevation !== "Forestline") {
-                        height = elevation + "m";
-                    }
-                    let level = loRatings[0].level;
-                    if (loRatings[0].level !== hiRatings[0].level) {
-                        level += hiRatings[0].level;
-                    }
-                    return [{ level: level, height: height }];
-                }
-                if (hiRatings[0].end === loRatings[0].end) {
-                    let height = "Waldgrenze"
-                    let elevation = hiRatings[0].elevation.substring(0, hiRatings[0].elevation.length - 2);
-                    if (elevation !== "Forestline") {
-                        height = elevation + "m"
-                    }
-                    let level = loRatings[0].level;
-                    if (loRatings[0].level !== hiRatings[0].level) {
-                        level += hiRatings[0].level
-                    }
-                    let height2 = "Waldgrenze"
-                    let elevation2 = hiRatings[1].elevation.substring(0, hiRatings[1].elevation.length - 2);
-                    if (elevation2 !== "Forestline") {
-                        height2 = elevation2 + "m"
-                    }
-                    let level2 = loRatings[1].level;
-                    if (loRatings[1].level !== hiRatings[1].level) {
-                        level2 += hiRatings[1].level
-                    }
-                    return [{ level: level, height: height, end: hiRatings[0].end }, { level: level2, height: height2, end: hiRatings[1].end }];
-                } else {
-                    let height = "Waldgrenze"
-                    let elevation = hiRatings[0].elevation.substring(0, hiRatings[0].elevation.length - 2);
-                    if (elevation !== "Forestline") {
-                        height = elevation + "m"
-                    }
-                    let level = loRatings[1].level;
-                    if (loRatings[1].level !== hiRatings[0].level) {
-                        level += hiRatings[0].level
-                    }
-                    let height2 = "Waldgrenze"
-                    let elevation2 = hiRatings[1].elevation.substring(0, hiRatings[1].elevation.length - 2);
-                    if (elevation2 !== "Forestline") {
-                        height2 = elevation2 + "m"
-                    }
-                    let level2 = loRatings[0].level;
-                    if (loRatings[0].level !== hiRatings[1].level) {
-                        level2 += hiRatings[1].level
-                    }
-                    return [{ level: level, height: height, end: hiRatings[1].end }, { level: level2, height: height2, end: hiRatings[0].end }];
-                }
-            } else if (tempRatings.length > 1) {
-                if (tempRatings[0].end < tempRatings[0].end) {
-                    return [{ level: tempRatings[0].level, height: null, end: tempRatings[0].end }, { level: tempRatings[1].level, height: null, end: tempRatings[1].end }];
-                } else {
-                    return [{ level: tempRatings[1].level, height: null, end: tempRatings[1].end }, { level: tempRatings[0].level, height: null, end: tempRatings[0].end }];
-                }
-            }
-            return [];
+        // Helper function to group danger ratings by time
+        function groupDangerRatingsByTime(dangerRatings) {
+            const morning = dangerRatings.filter(rating => rating.validTimePeriod === "earlier");
+            const afternoon = dangerRatings.filter(rating => rating.validTimePeriod === "later");
+            const all_day = dangerRatings.filter(rating => rating.validTimePeriod === "all_day");
+            return { morning, afternoon, all_day };
         }
 
-        function getWarningDate(warning) {
-            const options = {
-                timeZone: "UTC"
+
+        function createDangerImage(ratings, width) {
+            if (!ratings || ratings.length === 0) {
+                return createSingleDangerSVG("0", "#ccc", width);
+            }
+
+            const dangerLevelMap = {
+                "low": "1",
+                "moderate": "2",
+                "considerable": "3",
+                "high": "4",
+                "very_high": "5"
             };
-            return new Date(warning.getElementsByTagName('endPosition')[0].innerHTML).toLocaleDateString("de-DE", options);
-        }
 
-        function generateTempRatings(ratings) {
-            let temp = [];
-            for (let i = 0; i < ratings.length; i++) {
-                let end = null;
-                if (ratings.item(i).getElementsByTagName('endPosition').length > 0) {
-                    end = ratings.item(i).getElementsByTagName('endPosition')[0].innerHTML;
-                }
-                let elevation = null;
-                if (ratings.item(i).getElementsByTagName('validElevation').length > 0) {
-                    elevation = ratings.item(i).getElementsByTagName('validElevation')[0].attributes['xlink:href']['value'].split("Range_")[1];
-                }
-                temp.push({ end: end, elevation: elevation, level: ratings.item(i).getElementsByTagName('mainValue')[0].innerHTML });
+            const colorMap = {
+                "1": "#cf6", // Low
+                "2": "#ff0", // Moderate
+                "3": "#f90", // Considerable
+                "4": "red",  // High
+                "5": "url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAQAAAAnOwc2AAAAFElEQVR42mNgQID/cEgTQRobDwMAVpUxzxObnlMAAAAASUVORK5CYII=)" // Very High
+            };
+
+            if (ratings.length === 1) {
+                const level = dangerLevelMap[ratings[0].mainValue] || "0";
+                const color = colorMap[level] || "#ccc";
+
+                return createSingleDangerSVG(level, color, width);
             }
-            return temp;
-        }
 
-        function getProblemsAndAspects(problems) {
-            let temp = new Map();
-            for (let i = 0; i < problems.length; i++) {
-                let end = null;
-                let begin = null;
-                if (problems.item(i).getElementsByTagName('endPosition').length > 0) {
-                    end = problems.item(i).getElementsByTagName('endPosition')[0].innerHTML;
-                }
-                if (problems.item(i).getElementsByTagName('beginPosition').length > 0) {
-                    begin = problems.item(i).getElementsByTagName('beginPosition')[0].innerHTML;
-                }
-                let validAspects = [];
-                for (let j = 0; j < problems.item(i).getElementsByTagName('validAspect').length; j++) {
-                    validAspects.push(problems.item(i).getElementsByTagName('validAspect')[j].attributes['xlink:href']['value'].split("Range_")[1]);
-                }
-                const type = getProblemType(problems.item(i).getElementsByTagName('type')[0].innerHTML);
-                if (temp.has(type)) {
-                    tempValidAspects = temp.get(type);
-                    temp.set(type, [...new Set([...tempValidAspects, ...validAspects])]);
-                } else {
-                    temp.set(type, validAspects);
-                }
+            if (ratings.length === 2) {
+                let highLevel = { value: "0", color: "#ccc" };
+                let lowLevel = { value: "0", color: "#ccc" };
+
+                ratings.forEach(rating => {
+                    if (rating.elevation?.lowerBound) {
+                        const level = dangerLevelMap[rating.mainValue] || "0";
+                        lowLevel = { value: level, color: colorMap[level] || "#ccc" };
+                    }
+                    if (rating.elevation?.upperBound) {
+                        const level = dangerLevelMap[rating.mainValue] || "0";
+                        highLevel = { value: level, color: colorMap[level] || "#ccc" };
+                    }
+                });
+
+                const height = getElevationDescription(ratings[0].elevation);
+                return createCombinedDangerSVG(
+                    highLevel.value,
+                    lowLevel.value,
+                    highLevel.color,
+                    lowLevel.color,
+                    height,
+                    width
+                );
             }
-            return new Map([...temp.entries()].sort());;
         }
 
-        function getProblemType(typeString) {
-            let type = typeString.replace(' ', '_');
-            return type;
+        function createSingleDangerSVG(level, color, width) {
+            const svgNamespace = "http://www.w3.org/2000/svg";
+
+            const svg = document.createElementNS(svgNamespace, "svg");
+            svg.setAttribute("xmlns", svgNamespace);
+            svg.setAttribute("viewBox", "0 0 65 48");
+            svg.setAttribute("font-size", "12");
+            svg.setAttribute("width", width);
+
+            svg.innerHTML = `
+        <defs>
+            <path id="p0" d="M63.434 47.25A.5.5 0 0 1 63 48H1a.5.5 0 0 1-.432-.751l25-43a.5.5 0 0 1 .866.003l3.556 6.222L35.56.261a.5.5 0 0 1 .873-.01l27 47Z"></path>
+        </defs>
+        <g fill="none" fill-rule="evenodd">
+            <mask id="m0" fill="#fff">
+                <use xlink:href="#p0"></use>
+            </mask>
+            <use xlink:href="#p0" fill="#FFF"></use>
+            <g mask="url(#m0)">
+                <rect x="0" y="-1" width="65" height="50" fill="${color}"></rect>
+            </g>
+            <text text-anchor="middle" fill="#222" x="32.5" y="35">${level}</text>
+            <path stroke="#222" d="M63 47.5 36 .5l-6 11-4-7-25 43h62Z"></path>
+        </g>
+    `;
+
+            const container = document.createElement("div");
+            container.style.display = "inline-block";
+            container.style.textAlign = "center";
+            container.appendChild(svg);
+
+            return container;
         }
+
+
+        function createCombinedDangerSVG(highLevel, lowLevel, highColor, lowColor, height, width) {
+            const svgNamespace = "http://www.w3.org/2000/svg";
+
+            const svg = document.createElementNS(svgNamespace, "svg");
+            svg.setAttribute("xmlns", svgNamespace);
+            svg.setAttribute("viewBox", "0 0 65 48");
+            svg.setAttribute("font-size", "12");
+            svg.setAttribute("width", width);
+
+            svg.innerHTML = `
+        <defs>
+            <path id="p1" d="M11.334 0h39.462l10.34 18H.87z"></path>
+            <path id="p2" d="M.95 27 14.03 4.501l3.57 6.247a.5.5 0 0 0 .873-.009L24.046.523 39.256 27H.95Z"></path>
+        </defs>
+        <g fill="none" fill-rule="evenodd">
+            <!-- Low Altitude Rating -->
+            <g transform="translate(.5 29)">
+                <mask id="m1" fill="#fff"><use xlink:href="#p1"></use></mask>
+                <g mask="url(#m1)">
+                    <rect x="-1" y="-30" width="65" height="50" fill="${lowColor}"></rect>
+                </g>
+                <text text-anchor="middle" fill="#222" x="32" y="14">${lowLevel}</text>
+            </g>
+            <!-- High Altitude Rating -->
+            <g transform="translate(11.5 1)">
+                <mask id="m2" fill="#fff"><use xlink:href="#p2"></use></mask>
+                <g mask="url(#m2)">
+                    <rect x="-12" y="-2" width="65" height="50" fill="${highColor}"></rect>
+                </g>
+                <text text-anchor="middle" fill="#222" x="21" y="23">${highLevel}</text>
+            </g>
+        </g>
+    `;
+
+            // Add the Waldgrenze height label
+            const heightLabel = document.createElement("span");
+            heightLabel.textContent = height;
+            heightLabel.style.display = "inline-block";
+            heightLabel.style.fontWeight = "bold";
+            heightLabel.style.marginTop = "4px"; // Add spacing
+            heightLabel.style.color = "#FFF";
+
+            // Combine SVG and label
+            const container = document.createElement("div");
+            container.style.display = "inline-block";
+            container.style.textAlign = "center";
+            container.appendChild(svg);
+            container.appendChild(document.createElement("br"))
+            container.appendChild(heightLabel);
+
+            return container;
+        }
+
+
+        function getDangerText(level) {
+            const texts = {
+                "1": "gering",
+                "2": "mäßig",
+                "3": "erheblich",
+                "4": "hoch",
+                "5": "sehr hoch",
+                "0": "keine Gefahrenstufe"
+            };
+            return texts[level] || "unbekannt";
+        }
+
+        function getElevationDescription(elevation) {
+            if (!elevation) return "Waldgrenze";
+            if (elevation.lowerBound === "treeline") return "Waldgrenze";
+            if (elevation.upperBound === "treeline") return "Waldgrenze";
+            if (elevation.lowerBound) return `${elevation.lowerBound}m`;
+            if (elevation.upperBound) return `${elevation.upperBound}m`;
+            return "Waldgrenze";
+        }
+
     </script>
 </body>
 
