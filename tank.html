@@ -19,7 +19,7 @@
   </style>
 </head>
 <body>
-  <h3>Füllstand Tankanhänger BGD</h3>
+  <h2>Füllstand Tankanhänger BGD</h2>
   <div class="value" id="fillLevel">Lade Füllstand...</div>
   <div class="value" id="updatedAt">Lade Zeitstempel...</div>
 
@@ -63,7 +63,7 @@
       document.getElementById("fillLevel").textContent =
         `Füllstand: ${fill.currentValue} ${fill.unit}`;
       document.getElementById("updatedAt").textContent =
-        `Aktualisiert am: ${new Date(supply.updatedAt).toDateString("de-DE")}`;
+        `Aktualisiert: ${new Date(supply.updatedAt).toString("dd.MM.yy")}`;
     }
 
     loadData();
