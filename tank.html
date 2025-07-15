@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Tankanzeige Bergwacht</title>
+  <style>
+    html {
+        background-color: #2d3036;
+    }
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      color: #fff;
+    }
+    .value {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Füllstand Tankanhänger BGD</h1>
+  <div class="value" id="fillLevel">Lade Füllstand...</div>
+  <div class="value" id="updatedAt">Lade Zeitstempel...</div>
+
+  <script>
+    async function loadData() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+
+      if (!token) {
+        document.getElementById("fillLevel").textContent = "Kein Token übergeben.";
+        document.getElementById("updatedAt").textContent = "";
+        return;
+      }
+
+      const response = await fetch('https://api.services.bergwacht-bayern.org/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          query: `query Tank {
+            supply(filter: {callsign: {eq: "Bergwacht Berchtesgaden A- Tank"}}) {
+              addons
+              updatedAt
+              callsign
+            }
+          }`
+        })
+      });
+
+      if (!response.ok) {
+        document.getElementById("fillLevel").textContent = "Fehler beim Laden der Daten.";
+        return;
+      }
+
+      const data = await response.json();
+      const supply = data.data.supply;
+      const fill = supply.addons.fill_level;
+
+      document.getElementById("fillLevel").textContent =
+        `Füllstand: ${fill.currentValue} / ${fill.maxValue} ${fill.unit}`;
+      document.getElementById("updatedAt").textContent =
+        `Aktualisiert am: ${new Date(supply.updatedAt).toLocaleString("de-DE")}`;
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
