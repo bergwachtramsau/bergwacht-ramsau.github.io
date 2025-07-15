@@ -19,7 +19,7 @@
   </style>
 </head>
 <body>
-  <h1>Füllstand Tankanhänger BGD</h1>
+  <h3>Füllstand Tankanhänger BGD</h3>
   <div class="value" id="fillLevel">Lade Füllstand...</div>
   <div class="value" id="updatedAt">Lade Zeitstempel...</div>
 
@@ -61,9 +61,9 @@
       const fill = supply.addons.fill_level;
 
       document.getElementById("fillLevel").textContent =
-        `Füllstand: ${fill.currentValue} / ${fill.maxValue} ${fill.unit}`;
+        `Füllstand: ${fill.currentValue} ${fill.unit}`;
       document.getElementById("updatedAt").textContent =
-        `Aktualisiert am: ${new Date(supply.updatedAt).toLocaleString("de-DE")}`;
+        `Aktualisiert am: ${new Date(supply.updatedAt).toDateString("de-DE")}`;
     }
 
     loadData();
