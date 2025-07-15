@@ -19,7 +19,7 @@
   </style>
 </head>
 <body>
-  <h2>Füllstand Tankanhänger BGD</h2>
+  <h2>Tankanhänger BGD</h2>
   <div class="value" id="fillLevel">Lade Füllstand...</div>
   <div class="value" id="updatedAt">Lade Zeitstempel...</div>
 
@@ -59,11 +59,12 @@
       const data = await response.json();
       const supply = data.data.supply;
       const fill = supply.addons.fill_level;
+      const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
 
       document.getElementById("fillLevel").textContent =
         `Füllstand: ${fill.currentValue} ${fill.unit}`;
       document.getElementById("updatedAt").textContent =
-        `Aktualisiert: ${new Date(supply.updatedAt).toString("dd.MM.yy")}`;
+        `Aktualisiert: ${new Date(supply.updatedAt).toLocaleDateString("de-DE", options)}`;
     }
 
     loadData();
